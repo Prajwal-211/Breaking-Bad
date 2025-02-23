@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criminal Empire Dashboard</title>
+    <style>
+        *{
+            background-color:#b38e1e;
+            
+            
+        }
+    /* From Uiverse.io by SnyDeTreves */
+    
+.map-container {
+    --city-radius: 2rem;
+    --city-sign-color-back: black;
+    /* //heading highlight */
+    --city-sign-color-font: #fff;
+    --city-pin-size-font: 1.2rem;
+}
+
+.map-container {
+    border-radius: 0.5em;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+    line-height: 1;
+    min-width: 15rem;
+    position: relative;
+    width: 35%;
+    height:35%;
+    aspect-ratio: 1;
+    margin: 80px 0px 0px 150px;
+}
+
+.map-background {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.map-cities {
+    width: 100%;
+}
+
+.map-city {
+    border-radius: var(--city-radius);
+    left: calc(var(--x) * 1% - var(--city-radius));
+    padding: var(--city-radius);
+    position: absolute;
+    top: calc(var(--y) * 1% - var(--city-radius));
+    background-color: rgb(86, 32, 32);
+}
+
+.map-city::after,
+.map-city::before {
+    font-size: var(--city-pin-size-font);
+}
+
+.map-city::before {
+    content: "•";
+    left: calc(-50% + var(--city-radius));
+    position: absolute;
+    top: calc(-0.65em + var(--city-radius));
+    text-align: center;
+    text-shadow: 0 1px 1px #000;
+    width: 100%;
+}
+
+.map-city::after {
+    clip-path: inset(-0.9em 0 0 0);
+    content: "📍";
+    left: calc(-50% + var(--city-radius));
+    position: absolute;
+    top: calc(-1em + var(--city-radius));
+    text-align: center;
+    transition: all 300ms ease-out;
+    width: 100%;
+    z-index: var(--y);
+}
+
+.map-city__label {
+    display: none;
+    left: calc(-3.9em + 50%);
+    position: absolute;
+    text-align: center;
+    width: 26vh;
+    z-index: 999;
+    font-size: 1.2em;
+    background-color: black;
+}
+
+.map-city__sign {
+    align-items: center;
+    background-color: var(--city-sign-color-back);
+    border-radius: 0.2rem;
+    
+    box-shadow: 0 0 3px #000;
+    color: var(--city-sign-color-font);
+    column-gap: 0.3em;
+    display: flex;
+    font-weight: 700;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0.4em 0.6em 0.4em 0.3em;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    width: max-content;
+    font-size: 1em;
+}
+
+.map-city__sign::before {
+    content: attr(data-icon);
+}
+
+.map-city:hover::after {
+    clip-path: inset(-0.5em 0 0.5em 0);
+    transform: translateY(0.5em);
+}
+
+.map-city:hover .map-city__label {
+    animation: fadein 300ms forwards ease-out;
+    display: block;
+}
+
+.map-city:hover .map-city__sign.anim::before {
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+}
+
+.map-city:hover .map-city__sign.anim-grow::before {
+    animation-name: grow;
+    animation-timing-function: ease-in;
+}
+
+.map-city:hover .map-city__sign.anim-slidein::before {
+    animation-name: slidein;
+    animation-timing-function: ease-out;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+        top: calc(var(--city-radius));
+    }
+
+    100% {
+        opacity: 1;
+        top: calc(var(--city-radius) + var(--city-pin-size-font) / 2);
+    }
+}
+
+@keyframes grow {
+    0% {
+        transform: translate(0, 200%);
+    }
+
+    10% {
+        transform: translate(5%, 180%);
+    }
+
+    20% {
+        transform: translate(-10%, 160%);
+    }
+
+    30% {
+        transform: translate(15%, 140%);
+    }
+
+    40% {
+        transform: translate(-5%, 120%);
+    }
+
+    50% {
+        transform: translate(10%, 100%);
+    }
+
+    60% {
+        transform: translate(-15%, 80%);
+    }
+
+    70% {
+        transform: translate(5%, 60%);
+    }
+
+    80% {
+        transform: translate(0, 40%);
+    }
+
+    90% {
+        transform: translate(0, 20%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes slidein {
+    0% {
+        transform: translateX(-200%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.location-info {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px;
+    border-radius: 5px;
+    top: calc(100% + 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    z-index: 1000;
+    font-size: 1em;
+    width: 24vh;
+    height: 35vh;
+    text-align: center;
+    line-height: 3vh;
+}
+
+.map-city:hover .location-info {
+    display: block;
+    background-color: black;
+}
+
+.location-info p {
+    margin: 12px 0;
+    font-weight: bold;
+    background-color: black;
+
+}
+
+.location-info span {
+    font-weight: normal;
+    margin-left: 5px;
+    color: #ffa500;
+    background-color: black;
+
+}
+
+.location-info .risk-high {
+    color: #ff0000;
+}
+
+.location-info .risk-medium {
+    color: #ffa500;
+}
+
+.location-info .risk-low {
+    color: #ffa500;
+}
+
+.location-description {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    width: 38%;
+    height: 55vh;
+    background-color: rgb(86, 32, 32);
+    color: white;
+    padding: 20px;
+    border-radius: 0;
+    font-size: 1em;
+    margin-right: 80px;
+    
+    margin-top: 100px;
+    
+}
+
+.location-description h1{
+    margin-bottom: 10px;
+    color: #b38e1e;
+    background-color: rgb(86, 32, 32);
+    font-size: 35px;
+    font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+
+.location-description div {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    background-color: rgb(86, 32, 32);
+
+}
+
+.location-description div:last-child {
+    border-bottom: none;
+    background-color: rgb(86, 32, 32);
+
+}
+
+.location-description h2{
+    color: #f725997c;
+    margin-bottom: 5px;
+    background-color: rgb(86, 32, 32);
+    font-size: 25px;
+    font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+
+}
+
+.location-description p {
+    margin-bottom: 5px;
+    background-color: rgb(86, 32, 32);
+    color: #4fb9d6;
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+
+}
+.navs{
+    position: fixed;
+    top: 2rem;
+    right: 8.5rem;
+}
+
+.navs-btn{
+/* From Uiverse.io by ernestnash */ 
+ display: inline-block;
+ padding: 0.9rem 1.8rem;
+ font-size: 16px;
+ font-weight: 700;
+ color: #b38e1e;
+ border: 3px solid #d59c2b;
+ cursor: pointer;
+ position: relative;
+ background-color: rgba(86, 32, 32, 0.562);
+ text-decoration: none;
+ overflow: hidden;
+ z-index: 1;
+ font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+ margin-top: 20px;
+ width: 150px;
+}
+
+.navs-btn::before {
+ content: "";
+ position: absolute;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ color: black;
+ background-color:rgb(86, 32, 32);
+ transform: translateX(-100%);
+ transition: all .3s;
+ z-index: -1;
+}
+
+.navs-btn:hover::before {
+ transform: translateX(0);
+}
+
+</style>
+</head>
+<body>
+    <div class="map-container">
+        <svg viewBox="0 0 500 500" class="map-background">
+            <rect style="fill: rgb(86, 32, 32)" width="500" height="500"></rect>
+            <path
+                style="fill: #4fb9d6"
+                d="M0,367.82c5.83-4.39,14.42-10.16,25.59-15.34,4.52-2.09,43.19-19.51,79.55-11.93,36.1,7.52,35.75,32.55,78.41,60.23,46.34,30.06,109.47,41.21,123.32,22.1,11.95-16.49-22.61-41.92-13.66-84.6,4.85-23.1,22.33-50.71,47.73-58.52,42.42-13.05,78.83,39.45,102.84,23.86,15.81-10.26.01-32.87,22.73-74.43,5.8-10.62,11.65-21.15,11.93-36.93.28-15.69-5.63-26.64-7.95-32.39-6.66-16.45-6.21-45.15,28.84-98.55.23,146.23.46,292.46.69,438.69H0v-132.18Z"
+            ></path>
+        </svg>
+        <div class="map-cities">
+            <div style="--x: 20; --y: 50;" class="map-city" data-latitude="34.0522" data-longitude="-118.2437">
+                <div class="map-city__label">
+                    <span data-icon="🚐" class="map-city__sign">RV</span>
+                </div>
+                <div class="location-info">
+                    <p>Coordinates: <span>(34.0522, -118.2437)</span></p>
+                    <p>Cost to Operate: <span>$5,000</span></p>
+                    <p>Production Efficiency: <span>60%</span></p>
+                    <p>Risk Level: <span class="risk-high">High</span></p>
+                </div>
+            </div>
+            <div style="--x: 40; --y: 30;" class="map-city" data-latitude="37.7749" data-longitude="-122.4194">
+                <div class="map-city__label">
+                    <span data-icon="🏭" class="map-city__sign anim anim-grow">Warehouse</span>
+                </div>
+                <div class="location-info">
+                    <p>Coordinates: <span>(37.7749, -122.4194)</span></p>
+                    <p>Cost to Operate: <span>$10,000</span></p>
+                    <p>Production Efficiency: <span>80%</span></p>
+                    <p>Risk Level: <span class="risk-medium">Medium</span></p>
+                </div>
+            </div>
+            <div style="--x: 70; --y: 50;" class="map-city" data-latitude="40.7128" data-longitude="-74.0060">
+                <div class="map-city__label">
+                    <span data-icon="🧪" class="map-city__sign anim anim-slidein">Superlab</span>
+                </div>
+                <div class="location-info">
+                    <p>Coordinates: <span>(40.7128, -74.0060)</span></p>
+                    <p>Cost to Operate: <span>$50,000</span></p>
+                    <p>Production Efficiency: <span>95%</span></p>
+                    <p>Risk Level: <span class="risk-low">Low</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div  >
+        
+
+        <div id="rv-description" class="location-description">
+            <h1>Location Descriptions</h1>
+            <h2>RV</h2>
+            <p>A mobile meth lab, often disguised as a recreational vehicle.</p>
+            <p>Cheap to operate and can be moved quickly to avoid detection.</p>
+            <p>However, the risk of discovery is extremely high due to its mobile nature and smaller production capacity.</p>
+            <p>Prone to breakdowns and requires frequent maintenance.</p>
+        </div>
+
+        <div id="warehouse-description"class="location-description">
+            <h1>Location Descriptions</h1>
+            <h2>Warehouse</h2>
+            <p>Used for storing chemicals, equipment, and the final product.</p>
+            <p>Provides a more secure location than the RV, but still carries a moderate risk.</p>
+            <p>Offers better organization and can handle larger quantities.</p>
+            <p>Requires a significant upfront investment and ongoing operational costs.</p>
+        </div>
+
+        <div id="superlab-description"class="location-description">
+            <h1>Location Descriptions</h1>
+            <h2>Superlab</h2>
+            <p>A state-of-the-art, large-scale production facility.</p>
+            <p>Expensive to set up and maintain, but offers the highest efficiency and lowest risk.</p>
+            <p>Capable of producing large quantities of high-quality product.</p>
+            <p>Requires specialized personnel and advanced equipment.</p>
+        </div>
+
+    </div>
+    <div class="navs">
+        <a href="landing-page.html"><button class="navs-btn">Home</button></a>
+        <a href="dash-board.html"><button class="navs-btn" >Dashboard</button></a>
+        <a href="Revenue-risk.html"><button class="navs-btn">Risk</button></a>    
+    </div>
+
+    <script>
+        const cities = document.querySelectorAll('.map-city');
+
+        cities.forEach(city => {
+            city.addEventListener('mouseover', () => {
+                const cityLabel = city.querySelector('.map-city__label .map-city__sign').textContent;
+                const descriptions = {
+                    'RV': document.getElementById('rv-description'),
+                    'Warehouse': document.getElementById('warehouse-description'),
+                    'Superlab': document.getElementById('superlab-description')
+                };
+
+                for (const key in descriptions) {
+                    descriptions[key].style.display = 'none';
+                }
+
+                if (descriptions.hasOwnProperty(cityLabel)) {
+                    descriptions[cityLabel].style.display = 'block';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

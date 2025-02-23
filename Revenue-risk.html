@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking Bad Empire Dashboard</title>
+    <style>
+        /* body {
+            background-image: url("https://i.pinimg.com/736x/ce/e4/76/cee4769a36410990d3483bade8c14acb.jpg");
+            
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            font-family: monospace;
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        } */
+
+        body{
+            font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+}
+
+&::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("images/wp1930552-better-call-saul-wallpapers.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: brightness(60%);
+}
+
+        .container {
+            position: relative;
+            
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 800px;
+        }
+
+        .section {
+            /* background-color: #baacac; */
+            border-radius: 10px;
+            margin-top: 40px;
+            height: 40vh;
+            width: 30vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-left: 150px;
+        }
+
+        h2, h3 {
+            color: white;
+        }
+
+        .chart-area {
+            margin-left: 150px;
+            margin-top: 150px;
+            width: 450px;
+            height: 300px;
+        }
+
+        .chart-area canvas{
+            padding: 10px;
+        }
+
+        #revenueChart {
+            background-color: #1f1f1f;
+            height: 400px;
+            width: 300px;
+        }
+
+        .risk-meter {
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 150px;
+        }
+
+        .meter-bar {
+            width: 250px;
+            height: 20px;
+            background-color: #d59c2b71;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px auto;
+            
+            
+        }
+
+        .risk-level {
+            height: 100%;
+            width: 0%;
+            background-color: #d59c2b;
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+        }
+
+        .high-risk-animation {
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+
+.navs{
+    right: 10rem;
+    position: relative;
+    top: 8rem;
+}
+
+.navs-btn{
+/* From Uiverse.io by ernestnash */ 
+ display: inline-block;
+ padding: 0.9rem 1.8rem;
+ font-size: 16px;
+ font-weight: 700;
+ color: white;
+ border: 3px solid #d59c2b;
+ cursor: pointer;
+ position: relative;
+ background-color: rgba(0, 0, 0, 0.5);
+ text-decoration: none;
+ overflow: hidden;
+ z-index: 1;
+ font-family: inherit;
+ margin-top: 20px;
+ width: 150px;
+}
+
+.navs-btn::before {
+ content: "";
+ position: absolute;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ color: black;
+ background-color:#d59c2b;
+ transform: translateX(-100%);
+ transition: all .3s;
+ z-index: -1;
+}
+
+.navs-btn:hover::before {
+ transform: translateX(0);
+}
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h2 style=" font-size: 5vh; color: white;"> Revenue & Risk Analytics</h2>
+            <div class="chart-area">
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="risk-meter">
+                <h1 style="color: white;">Risk Meter</h1>
+                <div class="meter-bar">
+                    <div class="risk-level" id="riskLevelBar"></div>
+                </div>
+                <p style="color: white;" id="riskStatus">Risk Level: Low</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navs">
+        <a href="landing-page.html"><button class="navs-btn">Home</button></a>
+        <a href="dash-board.html"><button class="navs-btn" >Dashboard</button></a>
+        <a href="map.html"><button class="navs-btn">Map</button></a>
+        
+        
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const revenueData = [1000, 1500, 1200, 1800, 2000, 2500];
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: revenueData,
+                    borderColor: '#fcc006',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#00ff00',
+                    fill: false
+                    
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        });
+
+        const riskLevelBar = document.getElementById('riskLevelBar');
+        const riskStatus = document.getElementById('riskStatus');
+        let highRisk = false;
+
+        function updateRiskLevel(riskPercentage) {
+            riskLevelBar.style.width = riskPercentage + '%';
+
+            let status = "Low";
+            if (riskPercentage > 30) status = "Medium";
+            if (riskPercentage > 60) status = "High";
+            riskStatus.textContent = "Risk Level: " + status;
+
+            // let highRiskAlertShown = false; // Flag to track if the alert has been shown
+
+            // if (status === "High") {
+            //     riskLevelBar.classList.add("high-risk-animation");
+            //     setTimeout(() => riskLevelBar.classList.remove("high-risk-animation"), 1000);
+
+            // if (!highRiskAlertShown) {  // Check the flag
+            //     alert("Warning! Risk level is too high.");
+            //         highRiskAlertShown = true; // Set the flag to true after showing the alert
+            // }   
+            // } 
+            // else {
+            //     highRiskAlertShown = false; // Reset the flag if the status is no longer "High"
+            // }
+        }
+
+        setInterval(() => {
+            const randomRisk = Math.floor(Math.random() * 100);
+            updateRiskLevel(randomRisk);
+        }, 3000);
+    </script>
+</body>
+</html>
